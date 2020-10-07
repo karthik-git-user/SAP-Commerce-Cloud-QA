@@ -434,9 +434,9 @@
 	],
 	"tests": {
         "extensions": [
+			"novalnetcore",
 			"novalnetcheckoutaddon",
-			"novalnetbackoffice",
-			"novalnetcore"
+			"novalnetbackoffice"
         ],
         "annotations": [
             "UnitTests",
