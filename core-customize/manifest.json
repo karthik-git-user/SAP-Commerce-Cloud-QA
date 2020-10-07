@@ -429,8 +429,9 @@
 	],
 	"tests": {
         "extensions": [
-            "kiwi",
-            "tiger"
+			"novalnetcheckoutaddon",
+			"novalnetbackoffice",
+			"novalnetcore"
         ],
         "annotations": [
             "UnitTests",
