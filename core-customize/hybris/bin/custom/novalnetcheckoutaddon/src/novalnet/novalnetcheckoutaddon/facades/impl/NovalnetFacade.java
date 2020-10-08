@@ -353,8 +353,13 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         this.getModelService().saveAll(billingAddress, cartModel);
     }
 
-    public void saveOrderData(String orderCode, String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, final CartModel cartModel, NovalnetPaymentInfoModel paymentInfoModel, AddressModel billingAddress) {
+    public void saveOrderData(String orderCode, String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, final CartModel cartModel, NovalnetPaymentInfoModel paymentInfoModel) {
         List<OrderModel> orderInfoModel = getOrderInfoModel(orderCode);
+        
+        AddressModel billingAddress = this.getModelService().create(AddressModel.class);
+		billingAddress = addressReverseConverter.convert(addressData, billingAddress);
+		billingAddress.setEmail(emailAddress);
+		billingAddress.setOwner(cartModel);
 
         // Update OrderHistoryEntries
         OrderModel orderModel = this.getModelService().get(orderInfoModel.get(0).getPk());
