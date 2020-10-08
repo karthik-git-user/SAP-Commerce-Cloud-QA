@@ -268,7 +268,7 @@ public class NovalnetHopPaymentResponseController extends NovalnetPaymentMethodC
 					getSessionService().setAttribute("tid", orderComments);
 
 					novalnetFacade.updateOrderStatus(orderData.getCode(), paymentInfoModel);
-					novalnetFacade.saveOrderData(orderData.getCode(), orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, cartModel, paymentInfoModel, , billingAddress);
+					novalnetFacade.saveOrderData(orderData.getCode(), orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, cartModel, paymentInfoModel, billingAddress);
 
 					return confirmationPageURL(orderData);
 				
