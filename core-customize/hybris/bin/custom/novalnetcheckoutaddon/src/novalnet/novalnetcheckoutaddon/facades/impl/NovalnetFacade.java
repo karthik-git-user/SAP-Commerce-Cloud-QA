@@ -353,13 +353,8 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         this.getModelService().saveAll(billingAddress, cartModel);
     }
 
-    public void saveOrderData(String orderCode, String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, final CartModel cartModel, NovalnetPaymentInfoModel paymentInfoModel) {
+    public void saveOrderData(String orderCode, String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, final CartModel cartModel, NovalnetPaymentInfoModel paymentInfoModel, AddressModel billingAddress) {
         List<OrderModel> orderInfoModel = getOrderInfoModel(orderCode);
-        
-        AddressModel billingAddress = this.getModelService().create(AddressModel.class);
-		billingAddress = addressReverseConverter.convert(addressData, billingAddress);
-		billingAddress.setEmail(email);
-		billingAddress.setOwner(cartModel);
 
         // Update OrderHistoryEntries
         OrderModel orderModel = this.getModelService().get(orderInfoModel.get(0).getPk());
@@ -553,7 +548,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         StringBuilder query = new StringBuilder();
 
         // Select query for fetch NovalnetPaymentRefInfoModel
-        query.append("SELECT {pk} from {" + NovalnetPaymentRefInfoModel._TYPECODE + "} where {" + NovalnetPaymentRefInfoModel.CUSTOMERNO
+        query.append("SELECT {pk} from {" + NovalnetPaymentRefInfoModel._TYPECODE + "} where customerNo IS NOT NULL AND {" + NovalnetPaymentRefInfoModel.CUSTOMERNO
                 + "} = ?customerNo AND {" + NovalnetPaymentRefInfoModel.PAYMENTTYPE + "} = ?paymentType ORDER BY {creationtime} DESC LIMIT 2");
         FlexibleSearchQuery executeQuery = new FlexibleSearchQuery(query.toString());
 
