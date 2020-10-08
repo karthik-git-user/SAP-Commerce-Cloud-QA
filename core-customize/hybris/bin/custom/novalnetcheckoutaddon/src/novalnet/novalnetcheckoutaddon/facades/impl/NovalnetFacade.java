@@ -358,7 +358,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         
         AddressModel billingAddress = this.getModelService().create(AddressModel.class);
 		billingAddress = addressReverseConverter.convert(addressData, billingAddress);
-		billingAddress.setEmail(emailAddress);
+		billingAddress.setEmail(email);
 		billingAddress.setOwner(cartModel);
 
         // Update OrderHistoryEntries
