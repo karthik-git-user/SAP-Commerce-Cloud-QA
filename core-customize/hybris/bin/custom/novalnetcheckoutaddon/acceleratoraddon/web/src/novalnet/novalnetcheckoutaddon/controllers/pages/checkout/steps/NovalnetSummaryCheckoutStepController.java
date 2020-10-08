@@ -650,7 +650,7 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
         JSONObject transactionJsonObject = tomJsonObject.getJSONObject("transaction");
 
         if (redirect == true) {
-            String redirectURL = resultJsonObject.getString("redirect_url");
+            String redirectURL = resultJsonObject.get("redirect_url").toString();
             setupPageModel(model);
             model.addAttribute("paygateUrl", redirectURL);
             getSessionService().setAttribute("txn_secret", transactionJsonObject.get("txn_secret").toString());
