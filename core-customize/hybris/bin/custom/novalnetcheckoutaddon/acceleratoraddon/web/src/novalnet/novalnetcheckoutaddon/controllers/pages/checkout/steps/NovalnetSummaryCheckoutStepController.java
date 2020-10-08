@@ -648,13 +648,19 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
         JSONObject tomJsonObject = new JSONObject(response.toString());
         JSONObject resultJsonObject = tomJsonObject.getJSONObject("result");
         JSONObject transactionJsonObject = tomJsonObject.getJSONObject("transaction");
+        
+        if(!transactionJsonObject.get("status_code").toString().equals("100")) {
+			final String statMessage = resultJsonObject.get("status_text").toString() != null ? resultJsonObject.get("status_text").toString() : resultJsonObject.get("status_desc").toString();
+			getSessionService().setAttribute("novalnetCheckoutError", statMessage);
+			return getCheckoutStep().previousStep();
+		}
 
         if (redirect == true) {
-            String redirectURL = resultJsonObject.get("redirect_url").toString();
-            setupPageModel(model);
-            model.addAttribute("paygateUrl", redirectURL);
-            getSessionService().setAttribute("txn_secret", transactionJsonObject.get("txn_secret").toString());
-            getSessionService().setAttribute("txn_check", baseStore.getNovalnetPaymentAccessKey().trim());
+			String redirectURL = resultJsonObject.get("redirect_url").toString();
+			setupPageModel(model);
+			model.addAttribute("paygateUrl", redirectURL);
+			getSessionService().setAttribute("txn_secret", transactionJsonObject.get("txn_secret").toString());
+			getSessionService().setAttribute("txn_check", baseStore.getNovalnetPaymentAccessKey().trim());
 			return "redirect:" + redirectURL;
         }
 
