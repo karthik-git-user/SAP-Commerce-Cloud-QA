@@ -551,15 +551,18 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         executeCountQuery.addQueryParameter("paymentType", paymentType);
         SearchResult<NovalnetPaymentRefInfoModel> countResult = getFlexibleSearchService().search(executeCountQuery);
         
-        final List<NovalnetPaymentRefInfoModel> countPaymentInfo = countResult.getResult();
-        
-        System.out.println("==========================="+countPaymentInfo);
+        final List<NovalnetPaymentRefInfoModel> countPaymentInfo = countResult.getResult(); 
         
         StringBuilder query = new StringBuilder();
 
         // Select query for fetch NovalnetPaymentRefInfoModel
         query.append("SELECT {pk} from {" + NovalnetPaymentRefInfoModel._TYPECODE + "} where {" + NovalnetPaymentRefInfoModel.CUSTOMERNO
-                + "} = ?customerNo AND {" + NovalnetPaymentRefInfoModel.PAYMENTTYPE + "} = ?paymentType ORDER BY {creationtime} DESC LIMIT 2");
+                + "} = ?customerNo AND {" + NovalnetPaymentRefInfoModel.PAYMENTTYPE + "} = ?paymentType ORDER BY {creationtime} DESC");
+                
+        if(countPaymentInfo.keySet() > 2) {
+			query.append(" LIMIT 2 ");
+		}
+		
         FlexibleSearchQuery executeQuery = new FlexibleSearchQuery(query.toString());
 
         long customerId = Long.parseLong(customerNo);
