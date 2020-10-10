@@ -545,6 +545,16 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
      */
     public List<NovalnetPaymentRefInfoModel> getPaymentRefInfo(String customerNo, String paymentType) {
         // Initialize StringBuilder
+        StringBuilder countQuery = new StringBuilder();
+        countQuery.append("SELECT count(*) from {" + NovalnetPaymentRefInfoModel._TYPECODE + "} where  {" + NovalnetPaymentRefInfoModel.PAYMENTTYPE + "} = ?paymentType");
+        FlexibleSearchQuery executeCountQuery = new FlexibleSearchQuery(countQuery.toString());
+        executeCountQuery.addQueryParameter("paymentType", paymentType);
+        SearchResult<NovalnetPaymentRefInfoModel> countResult = getFlexibleSearchService().search(executeCountQuery);
+        
+        final List<NovalnetPaymentRefInfoModel> countPaymentInfo = countResult.getResult();
+        
+        Syetem.out.println("==========================="+countPaymentInfo);
+        
         StringBuilder query = new StringBuilder();
 
         // Select query for fetch NovalnetPaymentRefInfoModel
