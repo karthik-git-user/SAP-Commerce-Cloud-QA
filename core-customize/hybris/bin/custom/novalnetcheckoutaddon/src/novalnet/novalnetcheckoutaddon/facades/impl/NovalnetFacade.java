@@ -549,7 +549,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
 
         // Select query for fetch NovalnetPaymentRefInfoModel
         query.append("SELECT {pk} from {" + NovalnetPaymentRefInfoModel._TYPECODE + "} where {" + NovalnetPaymentRefInfoModel.CUSTOMERNO
-                + "} = ?customerNo AND {" + NovalnetPaymentRefInfoModel.PAYMENTTYPE + "} = ?paymentType ORDER BY {creationtime} DESC");
+                + "} = ?customerNo AND {" + NovalnetPaymentRefInfoModel.PAYMENTTYPE + "} = ?paymentType ORDER BY {creationtime} DESC LIMIT 2");
         FlexibleSearchQuery executeQuery = new FlexibleSearchQuery(query.toString());
 
         long customerId = Long.parseLong(customerNo);
