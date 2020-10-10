@@ -553,7 +553,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         
         final List<NovalnetPaymentRefInfoModel> countPaymentInfo = countResult.getResult();
         
-        Syetem.out.println("==========================="+countPaymentInfo);
+        System.out.println("==========================="+countPaymentInfo);
         
         StringBuilder query = new StringBuilder();
 
