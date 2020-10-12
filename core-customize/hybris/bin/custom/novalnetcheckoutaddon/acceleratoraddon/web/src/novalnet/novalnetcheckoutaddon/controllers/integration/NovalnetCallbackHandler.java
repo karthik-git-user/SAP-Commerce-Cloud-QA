@@ -88,7 +88,6 @@ public class NovalnetCallbackHandler implements BeforeControllerHandlerAdaptee {
         // Check for callback URL
         if (request.getRequestURL().toString().contains("/novalnet/callback")) {
 			
-			response.setStatus(HttpServletResponse.SC_OK);
 			final BaseStoreModel baseStore = novalnetFacade.getBaseStoreModel();
 
             // NOVALNET IP ADDRESS FROM HOST
@@ -119,8 +118,10 @@ public class NovalnetCallbackHandler implements BeforeControllerHandlerAdaptee {
             }
 
             // Set response status as OK
-            
+            response.setStatus(HttpServletResponse.SC_OK);
+             System.out.println("================"+request);
             Map<String, String> captureParams = getRequestParameterMap(request);
+            System.out.println(captureParams);
             Set<String> keys = captureParams.keySet();
             StringBuffer jsonParams = new StringBuffer();
 			for(String key: keys){
