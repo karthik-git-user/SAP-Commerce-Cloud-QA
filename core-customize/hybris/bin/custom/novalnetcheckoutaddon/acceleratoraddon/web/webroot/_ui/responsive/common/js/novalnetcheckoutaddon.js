@@ -26,8 +26,12 @@ ACC.novalnetcheckoutaddon = {
             ACC.novalnetcheckoutaddon.paymentSelectionProcess();
         });
         
-        if($('.order-billing-address').length) {
-			$('.order-billing-address').children('.value-order').replaceWith($("#novalnetaddressdata").html());
+        if($('.order-billing-address').length && $("#novalnetaddressdata").length) {
+			if($('.order-billing-address').children('.value-order').length) {
+				$('.order-billing-address').children('.value-order').replaceWith($("#novalnetaddressdata").html());
+			} else {
+				$('.order-billing-address').append("<div class = value-order>"+$("#novalnetaddressdata").html()+"</div>")
+			}
 		}
         
         if($('#accountIban').length) {

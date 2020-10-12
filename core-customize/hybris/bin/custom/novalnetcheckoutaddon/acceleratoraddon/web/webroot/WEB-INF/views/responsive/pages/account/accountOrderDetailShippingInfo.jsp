@@ -23,7 +23,7 @@
 								${customerData.getTitle()}   ${customerData.getFirstName()} &nbsp; ${customerData.getLastName()} <br>
 								${orderInfoModeladd.getLine1()} <br>
 								${orderInfoModeladd.getTown()} <br>
-								${billingAddress.getName()}  ${orderInfoModeladd.getPostalCode()}<br>
+								${billingAddress.getName()}<br>
                             </div>
                             
                             
