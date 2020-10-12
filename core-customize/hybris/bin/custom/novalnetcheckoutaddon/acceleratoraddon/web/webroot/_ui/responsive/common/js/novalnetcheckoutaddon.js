@@ -26,11 +26,11 @@ ACC.novalnetcheckoutaddon = {
             ACC.novalnetcheckoutaddon.paymentSelectionProcess();
         });
         
-        if($('.order-billing-address').length && $("#novalnetaddressdata").length) {
+        if($('.order-billing-address').length && $(".novalnetaddressdata").length) {
 			if($('.order-billing-address').children('.value-order').length) {
-				$('.order-billing-address').children('.value-order').replaceWith($("#novalnetaddressdata").html());
+				$('.order-billing-address').children('.value-order').replaceWith($(".novalnetaddressdata").html());
 			} else {
-				$('.order-billing-address').append("<div class = value-order>"+$("#novalnetaddressdata").html()+"</div>")
+				$('.order-billing-address').append("<div class = value-order>"+$(".novalnetaddressdata").html()+"</div>")
 			}
 		}
         
