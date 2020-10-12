@@ -26,6 +26,10 @@ ACC.novalnetcheckoutaddon = {
             ACC.novalnetcheckoutaddon.paymentSelectionProcess();
         });
         
+        if($('.order-billing-address').length) {
+			$('.order-billing-address').children('.value-order').replaceWith($("#novalnetaddressdata").html());
+		}
+        
         if($('#accountIban').length) {
 			$('#accountIban').css('text-transform','uppercase');
 		}

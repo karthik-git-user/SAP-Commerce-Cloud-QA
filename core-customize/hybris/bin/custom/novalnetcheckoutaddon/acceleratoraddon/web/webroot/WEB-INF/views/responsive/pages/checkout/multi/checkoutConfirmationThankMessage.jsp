@@ -20,6 +20,13 @@
 		<p><spring:theme code="text.paymentDetails"/><br/><b>${tid}</b></p>
 	</div>
 	
+	<div class = "novalnetaddressdata" style="display:none;">
+		${addressDetails.getTitleCode()}  ${addressDetails.getFirstName()}  ${addressDetails.getLastName()} <br>
+		${addressDetails.getLine1()} &nbsp; ${addressDetails.getLine2()} <br>
+		${addressDetails.getTown()} <br>
+		${addressDetails.getCountry().getName()} ${addressData.getPostalcode()} 
+	</div>
+	
 	<order:giftCoupons giftCoupons="${giftCoupons}"/>
 		
 	<c:if test="${not empty guestRegisterForm}">

@@ -61,7 +61,7 @@ import de.hybris.platform.servicelayer.exceptions.ModelNotFoundException;
 import de.hybris.platform.servicelayer.exceptions.UnknownIdentifierException;
 import de.hybris.platform.util.Config;
 import de.hybris.platform.yacceleratorstorefront.controllers.ControllerConstants;
-
+import de.hybris.platform.core.model.user.AddressModel;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -345,6 +345,7 @@ public class NovalnetAccountPageController extends AbstractSearchPageController 
     public String order(@PathVariable("orderCode") final String orderCode, final Model model,
                         final RedirectAttributes redirectModel) throws CMSItemNotFoundException {
         try {
+			OrderModel orderModel = novalnetFacade.getOrder(orderCode);
             final OrderData orderDetails = orderFacade.getOrderDetailsForCode(orderCode);
             final List<NovalnetPaymentInfoModel> paymentInfo = novalnetFacade.getNovalnetPaymentInfo(orderCode);
             if (paymentInfo != null && !paymentInfo.isEmpty()) {
@@ -358,6 +359,12 @@ public class NovalnetAccountPageController extends AbstractSearchPageController 
             }
 
             model.addAttribute("orderData", orderDetails);
+            AddressModel address = orderModel.getPaymentInfo().getBillingAddress();
+            final CountryData countryData = addressDataUtil.getI18NFacade().getCountryForIsocode(address.getCountry().getIsocode());
+			model.addAttribute("customerData", customerFacade.getCurrentCustomer());
+            model.addAttribute("orderInfoModeladd", address);
+            model.addAttribute("billingAddress", countryData);
+            
             final List<Breadcrumb> breadcrumbs = accountBreadcrumbBuilder.getBreadcrumbs(null);
             breadcrumbs.add(new Breadcrumb("/my-account/orders", getMessageSource().getMessage("text.account.orderHistory", null,
                     getI18nService().getCurrentLocale()), null));

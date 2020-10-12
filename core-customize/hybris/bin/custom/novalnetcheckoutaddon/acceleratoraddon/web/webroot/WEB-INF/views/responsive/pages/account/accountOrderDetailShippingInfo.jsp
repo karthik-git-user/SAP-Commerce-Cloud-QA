@@ -16,7 +16,17 @@
                 <div class="col-sm-12 col-md-9">
                     <div class="row">
                         <div class="col-sm-6 col-md-4 order-billing-address">
-                            <order:billingAddressItem order="${orderData}"/>
+                            <div class="label-order">
+								<spring:theme code="text.account.paymentDetails.billingAddress"/>
+							</div>
+							<div class="value-order">
+								${customerData.getTitle()}   ${customerData.getFirstName()} &nbsp; ${customerData.getLastName()} <br>
+								${orderInfoModeladd.getLine1()} <br>
+								${orderInfoModeladd.getTown()} <br>
+								${billingAddress.getName()}  ${orderInfoModeladd.getPostalCode()}<br>
+                            </div>
+                            
+                            
                         </div>
 						<div class="col-sm-6 col-md-4 order-payment-data">
 							<spring:htmlEscape defaultHtmlEscape="true"/>

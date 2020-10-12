@@ -260,6 +260,8 @@ public class NovalnetCheckoutController extends AbstractCheckoutController {
         model.addAttribute("paymentInfo", orderDetails.getPaymentInfo());
         model.addAttribute("pageType", PageType.ORDERCONFIRMATION.name());
         model.addAttribute("tid", getSessionService().getAttribute("tid"));
+        AddressData addressData = getSessionService().getAttribute("novalnetAddressData");
+		model.addAttribute("addressDetails", addressData);
 
         final List<CouponData> giftCoupons = orderDetails.getAppliedOrderPromotions().stream()
                 .filter(x -> CollectionUtils.isNotEmpty(x.getGiveAwayCouponCodes())).flatMap(p -> p.getGiveAwayCouponCodes().stream())
