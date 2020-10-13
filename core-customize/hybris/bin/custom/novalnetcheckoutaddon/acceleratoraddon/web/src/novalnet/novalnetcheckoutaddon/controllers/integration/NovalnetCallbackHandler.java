@@ -48,13 +48,11 @@ import org.springframework.web.method.HandlerMethod;
 import de.hybris.platform.util.localization.Localization;
 import de.hybris.platform.store.BaseStoreModel;
 import de.hybris.platform.addonsupport.interceptors.BeforeControllerHandlerAdaptee;
-
 import javax.annotation.Resource;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import de.hybris.platform.util.Config;
-
 import org.apache.log4j.Logger;
-
 import novalnet.novalnetcheckoutaddon.facades.NovalnetFacade;
 import de.hybris.novalnet.core.model.NovalnetCallbackInfoModel;
 import de.hybris.novalnet.core.model.NovalnetPaymentInfoModel;
