@@ -83,6 +83,8 @@ public class NovalnetCallbackHandler implements BeforeControllerHandlerAdaptee {
      * @param handler  handler
      * @return Boolean
      */
+    @RequestMapping(value =
+            {"/novalnet/callback"}, method = RequestMethod.POST)
     public boolean beforeController(HttpServletRequest request, HttpServletResponse response, HandlerMethod handler) throws Exception {
 
         // Check for callback URL
