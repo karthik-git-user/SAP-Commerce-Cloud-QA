@@ -396,7 +396,7 @@ public class NovalnetPaymentMethodCheckoutStepController extends AbstractCheckou
             NovalnetDirectDebitSepaPaymentModeModel novalnetDirectDebitSepaPaymentMethod = (NovalnetDirectDebitSepaPaymentModeModel) paymentNovalnetDirectDebitSepaModeModel;
 
             getSessionService().setAttribute("novalnetDirectDebitSepaStorePaymentData", false);
-            if (Boolean.TRUE.equals(novalnetDirectDebitSepaPaymentMethod.getNovalnetOneClickShopping())) {
+            if (Boolean.TRUE.equals(novalnetDirectDebitSepaPaymentMethod.getNovalnetOneClickShopping()) && !novalnetFacade.isGuestUser()) {
 				
 				
 				try {
@@ -468,7 +468,8 @@ public class NovalnetPaymentMethodCheckoutStepController extends AbstractCheckou
                 return addPaymentProcess(model);
             }
             getSessionService().setAttribute("novalnetCreditCardStorePaymentData", false);
-            if (Boolean.TRUE.equals(novalnetPaymentMethod.getNovalnetOneClickShopping())) {
+
+            if (Boolean.TRUE.equals(novalnetPaymentMethod.getNovalnetOneClickShopping()) && !novalnetPaymentMethod.getNovalnet3dSecure() && !novalnetFacade.isGuestUser()) {
 				
 				try {
 					oneClickData = paymentDetailsForm.getCreditCardOneClickData1();
@@ -502,7 +503,7 @@ public class NovalnetPaymentMethodCheckoutStepController extends AbstractCheckou
 			PaymentModeModel paymentModeModel = paymentModeService.getPaymentModeForCode(currentPayment);
             NovalnetPayPalPaymentModeModel novalnetPaymentMethod = (NovalnetPayPalPaymentModeModel) paymentModeModel;
             getSessionService().setAttribute("novalnetPayPalStorePaymentData", false);
-            if (Boolean.TRUE.equals(novalnetPaymentMethod.getNovalnetOneClickShopping())) {
+            if (Boolean.TRUE.equals(novalnetPaymentMethod.getNovalnetOneClickShopping()) && !novalnetFacade.isGuestUser()) {
 				try {
 					oneClickData = paymentDetailsForm.getPayPalOneClickData1();
 					if (paymentDetailsForm.getPayPalOneClickData1() == null) { 
