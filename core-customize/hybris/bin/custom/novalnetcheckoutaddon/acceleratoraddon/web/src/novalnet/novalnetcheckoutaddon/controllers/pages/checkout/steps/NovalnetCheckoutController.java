@@ -299,7 +299,7 @@ public class NovalnetCheckoutController extends AbstractCheckoutController {
         if (orderDetails.isGuestCustomer() && !model.containsAttribute("guestRegisterForm")) {
             final GuestRegisterForm guestRegisterForm = new GuestRegisterForm();
             guestRegisterForm.setOrderCode(orderDetails.getGuid());
-            uid = orderDetails.getPaymentInfo().getBillingAddress().getEmail();
+            uid = getSessionService().getAttribute("email");
             guestRegisterForm.setUid(uid);
             model.addAttribute(guestRegisterForm);
         } else {

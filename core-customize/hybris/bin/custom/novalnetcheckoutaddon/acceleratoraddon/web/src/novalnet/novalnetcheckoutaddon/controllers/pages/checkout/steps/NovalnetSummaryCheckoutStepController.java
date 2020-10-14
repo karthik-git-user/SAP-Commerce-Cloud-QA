@@ -742,6 +742,7 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
 
 
             getSessionService().setAttribute("tid", orderComments + bankDetails);
+            getSessionService().setAttribute("email", customerJsonObject.getString("email"));
             paymentInfoModel.setOrderHistoryNotes(bankDetails);
 
             PaymentTransactionEntryModel orderTransactionEntry = null;
