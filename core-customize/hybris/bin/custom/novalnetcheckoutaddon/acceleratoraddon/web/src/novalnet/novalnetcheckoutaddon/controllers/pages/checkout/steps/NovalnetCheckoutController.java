@@ -196,28 +196,79 @@ public class NovalnetCheckoutController extends AbstractCheckoutController {
      * (javax.servlet.http.HttpServletRequest)
      */
     protected String processRegisterGuestUserRequest(final GuestRegisterForm form, final BindingResult bindingResult,
-                                                     final Model model, final HttpServletRequest request, final HttpServletResponse response,
-                                                     final RedirectAttributes redirectModel) throws CMSItemNotFoundException {
-        if (bindingResult.hasErrors()) {
-            GlobalMessages.addErrorMessage(model, "form.global.error");
-            return processOrderCode(form.getOrderCode(), model, request);
-        }
-        try {
-            getCustomerFacade().changeGuestToCustomer(form.getPwd(), form.getOrderCode());
-            getAutoLoginStrategy().login(getCustomerFacade().getCurrentCustomer().getUid(), form.getPwd(), request, response);
-            getSessionService().removeAttribute(WebConstants.ANONYMOUS_CHECKOUT);
-        } catch (final DuplicateUidException e) {
-            // User already exists
-            LOG.warn("guest registration failed: " + e);
-            model.addAttribute(new GuestRegisterForm());
-            GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
-                    "guest.checkout.existingaccount.register.error", new Object[]
-                            {form.getUid()});
-            return REDIRECT_PREFIX + request.getHeader("Referer");
-        }
+			final Model model, final HttpServletRequest request, final HttpServletResponse response,
+			final RedirectAttributes redirectModel) throws CMSItemNotFoundException
+	{
+		if (bindingResult.hasErrors())
+		{
+			form.setTermsCheck(false);
+			GlobalMessages.addErrorMessage(model, "form.global.error");
+			return processOrderCode(form.getOrderCode(), model, request, redirectModel);
+		}
+		try
+		{
+			getCustomerFacade().changeGuestToCustomer(form.getPwd(), form.getOrderCode());
+			getAutoLoginStrategy().login(getCustomerFacade().getCurrentCustomer().getUid(), form.getPwd(), request, response);
+			getSessionService().removeAttribute(WebConstants.ANONYMOUS_CHECKOUT);
+		}
+		catch (final DuplicateUidException e)
+		{
+			// User already exists
+			LOG.debug("guest registration failed.");
+			form.setTermsCheck(false);
+			model.addAttribute(new GuestRegisterForm());
+			GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER,
+					"guest.checkout.existingaccount.register.error", new Object[]
+					{ form.getUid() });
+			return REDIRECT_PREFIX + request.getHeader("Referer");
+		}
 
-        return REDIRECT_PREFIX + "/my-account";
-    }
+		// Consent form data
+		try
+		{
+			final ConsentForm consentForm = form.getConsentForm();
+			if (consentForm != null && consentForm.getConsentGiven())
+			{
+				getConsentFacade().giveConsent(consentForm.getConsentTemplateId(), consentForm.getConsentTemplateVersion());
+			}
+		}
+		catch (final Exception e)
+		{
+			LOG.error("Error occurred while creating consents during registration", e);
+			GlobalMessages.addFlashMessage(redirectModel, GlobalMessages.ERROR_MESSAGES_HOLDER, CONSENT_FORM_GLOBAL_ERROR);
+		}
+
+		// save anonymous-consent cookies as ConsentData
+		final Cookie cookie = WebUtils.getCookie(request, WebConstants.ANONYMOUS_CONSENT_COOKIE);
+		if (cookie != null)
+		{
+			try
+			{
+				final ObjectMapper mapper = new ObjectMapper();
+				final List<AnonymousConsentData> anonymousConsentDataList = Arrays.asList(mapper.readValue(
+						URLDecoder.decode(cookie.getValue(), StandardCharsets.UTF_8.displayName()), AnonymousConsentData[].class));
+				anonymousConsentDataList.stream().filter(consentData -> CONSENT_GIVEN.equals(consentData.getConsentState()))
+						.forEach(consentData -> consentFacade.giveConsent(consentData.getTemplateCode(),
+								Integer.valueOf(consentData.getTemplateVersion())));
+			}
+			catch (final UnsupportedEncodingException e)
+			{
+				LOG.error(String.format("Cookie Data could not be decoded : %s", cookie.getValue()), e);
+			}
+			catch (final IOException e)
+			{
+				LOG.error("Cookie Data could not be mapped into the Object", e);
+			}
+			catch (final Exception e)
+			{
+				LOG.error("Error occurred while creating Anonymous cookie consents", e);
+			}
+		}
+
+		customerConsentDataStrategy.populateCustomerConsentDataInSession();
+
+		return REDIRECT_PREFIX + "/";
+	}
 
     /*
      * (non-Javadoc)
