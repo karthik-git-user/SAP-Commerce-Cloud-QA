@@ -197,8 +197,17 @@ public class NovalnetHopPaymentResponseController extends NovalnetPaymentMethodC
 					final OrderData orderData;
 					
 					String bankDetails = "";
-
-					orderData = novalnetFacade.saveOrderData(orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, bankDetails);
+					
+					try
+					{
+						orderData = novalnetFacade.saveOrderData(orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, bankDetails);
+					}
+					catch (final Exception e)
+					{
+						//~ LOG.error("Failed to place Order.  Please check the log files for more information" + e);
+						getSessionService().setAttribute("novalnetCheckoutError", Localization.getLocalizedString("novalnet.unknown.error") );
+						return getCheckoutStep().currentStep();
+					}
 
 					transactionParameters.clear();
 					dataParameters.clear();
