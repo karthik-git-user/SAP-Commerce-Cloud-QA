@@ -151,7 +151,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         final String paymentMethod = paymentInfoModel.getPaymentProvider();        
         String[] bankPayments = {"novalnetInvoice", "novalnetPrepayment", "novalnetBarzahlen"};
 		boolean isInvoicePrepayment = Arrays.asList(bankPayments).contains(paymentMethod);
-		Integer[] pendingStatusCode = {"ON_HOLD","PENDING"};
+		String[] pendingStatusCode = {"ON_HOLD","PENDING"};
 
 		// Check for payment pending payments
 		if(isInvoicePrepayment || Arrays.asList(pendingStatusCode).contains(paymentInfoModel.getPaymentGatewayStatus()))
