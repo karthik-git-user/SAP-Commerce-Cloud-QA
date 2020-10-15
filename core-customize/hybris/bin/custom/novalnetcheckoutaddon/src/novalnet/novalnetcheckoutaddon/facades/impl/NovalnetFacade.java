@@ -144,11 +144,26 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
     public void updateOrderStatus(String orderCode, NovalnetPaymentInfoModel paymentInfoModel) {
         List<OrderModel> orderInfoModel = getOrderInfoModel(orderCode);
 
-        // Update OrderHistoryEntries
         OrderModel orderModel = this.getModelService().get(orderInfoModel.get(0).getPk());
         final BaseStoreModel baseStore = this.getBaseStoreModel();
         orderModel.setStatus(getOrderStatus(paymentInfoModel, baseStore));
-        orderModel.setPaymentStatus(PaymentStatus.PAID);
+        
+        final String paymentMethod = paymentInfoModel.getPaymentProvider();        
+        String[] bankPayments = {"novalnetInvoice", "novalnetPrepayment", "novalnetBarzahlen"};
+		boolean isInvoicePrepayment = Arrays.asList(bankPayments).contains(paymentMethod);
+		Integer[] pendingStatusCode = {"ON_HOLD","PENDING"};
+
+		// Check for payment pending payments
+		if(isInvoicePrepayment || Arrays.asList(pendingStatusCode).contains(paymentInfoModel.getPaymentGatewayStatus()))
+		{
+			orderModel.setPaymentStatus(PaymentStatus.NOTPAID);
+		}
+		else
+		{
+			// Update the payment status for completed payments
+			orderModel.setPaymentStatus(PaymentStatus.PAID);
+		}
+        
         this.getModelService().save(orderModel);
 
     }
@@ -260,7 +275,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
     public OrderStatus getOrderStatus(NovalnetPaymentInfoModel paymentInfoModel, BaseStoreModel baseStore) {
         final String paymentMethod = paymentInfoModel.getPaymentProvider();
         PaymentModeModel paymentModeModel = paymentModeService.getPaymentModeForCode(paymentMethod);
-
+        
         if (paymentMethod.equals("novalnetCreditCard")) {
             NovalnetCreditCardPaymentModeModel novalnetPaymentMethod = (NovalnetCreditCardPaymentModeModel) paymentModeModel;
             if (paymentInfoModel.getPaymentGatewayStatus().equals("ON_HOLD")) {
