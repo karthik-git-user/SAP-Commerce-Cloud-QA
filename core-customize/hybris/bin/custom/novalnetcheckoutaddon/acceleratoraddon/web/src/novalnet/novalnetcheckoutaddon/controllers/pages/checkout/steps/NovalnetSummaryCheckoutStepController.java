@@ -676,6 +676,23 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
             // Invalid cart. Bounce back to the cart page.
             return REDIRECT_PREFIX + "/cart";
         }
+        
+        // authorize, if failure occurs don't allow to place the order
+		boolean isPaymentUthorized = false;
+		try
+		{
+			isPaymentUthorized = getCheckoutFacade().authorizePayment(placeOrderForm.getSecurityCode());
+		}
+		catch (final AdapterException ae)
+		{
+			// handle a case where a wrong paymentProvider configurations on the store see getCommerceCheckoutService().getPaymentProvider()
+			LOGGER.error(ae.getMessage(), ae);
+		}
+		if (!isPaymentUthorized)
+		{
+			GlobalMessages.addErrorMessage(model, "checkout.error.authorization.failed");
+			return enterStep(model, redirectModel);
+		}
 
         String[] successStatus = {"CONFIRMED", "ON_HOLD", "PENDING"};
 
