@@ -702,26 +702,6 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
             String orderComments = "Novalnet transaction id : " + transactionJsonObject.get("tid");
             AddressData addressData = getSessionService().getAttribute("novalnetAddressData");
 
-            AddressModel billingAddress = novalnetFacade.getBillingAddress();
-            billingAddress = addressReverseConverter.convert(addressData, billingAddress);
-            billingAddress.setEmail(customerJsonObject.getString("email"));
-            billingAddress.setOwner(cartModel);
-
-            novalnetFacade.saveData(billingAddress, cartModel);
-
-            final UserModel currentUser = novalnetFacade.getCurrentUser();
-            NovalnetPaymentInfoModel paymentInfoModel = new NovalnetPaymentInfoModel();
-            paymentInfoModel.setBillingAddress(billingAddress);
-            paymentInfoModel.setPaymentEmailAddress(customerJsonObject.getString("email"));
-            paymentInfoModel.setDuplicate(Boolean.FALSE);
-            paymentInfoModel.setSaved(Boolean.TRUE);
-            paymentInfoModel.setUser(currentUser);
-            paymentInfoModel.setPaymentInfo(orderComments);
-            paymentInfoModel.setOrderHistoryNotes("");
-            paymentInfoModel.setPaymentProvider(currentPayment);
-            paymentInfoModel.setCode("");
-            paymentInfoModel.setPaymentGatewayStatus(transactionJsonObject.get("status").toString());
-
             String bankDetails = "";
             if ((currentPayment.equals("novalnetInvoice") || currentPayment.equals("novalnetPrepayment") || currentPayment.equals("novalnetGuaranteedInvoice"))) {
                 bankDetails += "<br>";
@@ -757,23 +737,8 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
                 }
             }
 
-
             getSessionService().setAttribute("tid", orderComments + bankDetails);
             getSessionService().setAttribute("email", customerJsonObject.getString("email"));
-            paymentInfoModel.setOrderHistoryNotes(bankDetails);
-
-            PaymentTransactionEntryModel orderTransactionEntry = null;
-            final List<PaymentTransactionEntryModel> paymentTransactionEntries = new ArrayList<>();
-            orderTransactionEntry = novalnetFacade.createTransactionEntry(transactionJsonObject.get("tid").toString(), cartModel, orderAmountCent, orderComments, transactionJsonObject.getString("currency"));
-            paymentTransactionEntries.add(orderTransactionEntry);
-
-            // Initiate/ Update PaymentTransactionModel
-            PaymentTransactionModel paymentTransactionModel = new PaymentTransactionModel();
-            paymentTransactionModel.setPaymentProvider(currentPayment);
-            paymentTransactionModel.setRequestId(transactionJsonObject.get("tid").toString());
-            paymentTransactionModel.setEntries(paymentTransactionEntries);
-            paymentTransactionModel.setOrder(cartModel);
-            paymentTransactionModel.setInfo(paymentInfoModel);
             
 			if (currentPayment.equals("novalnetCreditCard") && !novalnetFacade.isGuestUser() && oneClickShopping) {
 				boolean novalnetCreditCardStorePaymentData = getSessionService().getAttribute("novalnetCreditCardStorePaymentData");
@@ -789,23 +754,13 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
 					novalnetFacade.handleReferenceTransactionInfo(response, customerNo, "novalnetDirectDebitSepa");
 				}
 			}
-            
-            // Update the OrderModel
-            cartModel.setPaymentTransactions(Arrays.asList(paymentTransactionModel));
-
-            cartModel.setPaymentInfo(paymentInfoModel);
-            
-            final OrderData orderData;
-            try {
-                orderData = getCheckoutFacade().placeOrder();
-            } catch (final Exception e) {
-                LOGGER.error("Failed to place Order", e);
-                GlobalMessages.addErrorMessage(model, "checkout.placeOrder.failed");
-                return enterStep(model, redirectModel);
-            }
 
             transactionParameters.clear();
             dataParameters.clear();
+            
+            final OrderData orderData;
+
+            orderData = novalnetFacade.saveOrderData(orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, bankDetails);
 
 
             if ((currentPayment.equals("novalnetInvoice") || currentPayment.equals("novalnetPrepayment"))) {
@@ -833,8 +788,6 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
             StringBuffer responseString = novalnetFacade.sendRequest(url, jsonString);
 
             
-
-            novalnetFacade.saveOrderData(orderData.getCode(), orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, cartModel, paymentInfoModel, billingAddress);
             //~ novalnetFacade.updateOrderStatus(orderData.getCode(), paymentInfoModel);
 
             return confirmationPageURL(orderData);

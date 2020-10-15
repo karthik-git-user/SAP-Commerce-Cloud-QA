@@ -188,53 +188,17 @@ public class NovalnetHopPaymentResponseController extends NovalnetPaymentMethodC
 					
 				if (Arrays.asList(successStatus).contains(transactionJsonObject.get("status").toString())) {
 
-					final CartModel cartModel = novalnetFacade.getNovalnetCheckoutCart();
+					
 					String orderComments = "Novalnet transaction id : " + transactionJsonObject.get("tid");
 					AddressData addressData = getSessionService().getAttribute("novalnetAddressData");
 
-					AddressModel billingAddress = novalnetFacade.getBillingAddress();
-					billingAddress = addressReverseConverter.convert(addressData, billingAddress);
-					billingAddress.setEmail(customerJsonObject.getString("email"));
-					billingAddress.setOwner(cartModel);
-
-					final UserModel currentUser = novalnetFacade.getCurrentUser();
-					NovalnetPaymentInfoModel paymentInfoModel = new NovalnetPaymentInfoModel();
-					paymentInfoModel.setBillingAddress(billingAddress);
-					paymentInfoModel.setPaymentEmailAddress(customerJsonObject.getString("email"));
-					paymentInfoModel.setDuplicate(Boolean.FALSE);
-					paymentInfoModel.setSaved(Boolean.TRUE);
-					paymentInfoModel.setUser(currentUser);
-					paymentInfoModel.setPaymentInfo(orderComments);
-					paymentInfoModel.setOrderHistoryNotes("");
-					paymentInfoModel.setPaymentProvider(currentPayment);
-					paymentInfoModel.setCode("");
-					paymentInfoModel.setPaymentGatewayStatus(transactionJsonObject.get("status").toString());
-
-					PaymentTransactionEntryModel orderTransactionEntry = null;
 					int orderAmountCent = Integer.parseInt(transactionJsonObject.get("amount").toString());
 
-					final List<PaymentTransactionEntryModel> paymentTransactionEntries = new ArrayList<>();
-					orderTransactionEntry = novalnetFacade.createTransactionEntry(transactionJsonObject.get("tid").toString(), cartModel, orderAmountCent, orderComments, transactionJsonObject.getString("currency"));
-					paymentTransactionEntries.add(orderTransactionEntry);
-
-					// Initiate/ Update PaymentTransactionModel
-					PaymentTransactionModel paymentTransactionModel = new PaymentTransactionModel();
-					paymentTransactionModel.setPaymentProvider(currentPayment);
-					paymentTransactionModel.setRequestId(transactionJsonObject.get("tid").toString());
-					paymentTransactionModel.setEntries(paymentTransactionEntries);
-					paymentTransactionModel.setOrder(cartModel);
-					paymentTransactionModel.setInfo(paymentInfoModel);
-
-					// Update the OrderModel
-					cartModel.setPaymentTransactions(Arrays.asList(paymentTransactionModel));
-					cartModel.setPaymentInfo(paymentInfoModel);
 					final OrderData orderData;
+					
+					String bankDetails = "";
 
-					try {
-						orderData = getCheckoutFacade().placeOrder();
-					} catch (final Exception e) {
-						return getCheckoutStep().currentStep();
-					}
+					orderData = novalnetFacade.saveOrderData(orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, bankDetails);
 
 					transactionParameters.clear();
 					dataParameters.clear();
@@ -268,11 +232,7 @@ public class NovalnetHopPaymentResponseController extends NovalnetPaymentMethodC
 					getSessionService().setAttribute("tid", orderComments);
 					getSessionService().setAttribute("email", customerJsonObject.getString("email"));
 
-					novalnetFacade.updateOrderStatus(orderData.getCode(), paymentInfoModel);
-					novalnetFacade.saveOrderData(orderData.getCode(), orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, cartModel, paymentInfoModel, billingAddress);
-
 					return confirmationPageURL(orderData);
-				
 				}
 				else
 				{

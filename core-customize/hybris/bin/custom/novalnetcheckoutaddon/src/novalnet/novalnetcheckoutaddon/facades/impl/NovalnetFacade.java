@@ -377,14 +377,67 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         return orderModel;
     }
 
-    public void saveOrderData(String orderCode, String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, final CartModel cartModel, NovalnetPaymentInfoModel paymentInfoModel, AddressModel billingAddress) {
-        List<OrderModel> orderInfoModel = getOrderInfoModel(orderCode);
+    public void saveOrderData(String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, String bankDetails) {
+		final CartModel cartModel = getCart();
+		
+		final UserModel currentUser = getCurrentUserForCheckout();
+
+		final BaseStoreModel baseStore = this.getBaseStoreModel();
+		
+		String backendTransactionComments = orderComments.replace("<br/>", " ");
+		
+		AddressModel billingAddress = this.getModelService().create(AddressModel.class);
+		billingAddress = addressReverseConverter.convert(addressData, billingAddress);
+		billingAddress.setEmail(email);
+		billingAddress.setOwner(cartModel);
+		
+		NovalnetPaymentInfoModel paymentInfoModel = new NovalnetPaymentInfoModel();
+		paymentInfoModel.setBillingAddress(billingAddress);
+		paymentInfoModel.setPaymentEmailAddress(email);
+		paymentInfoModel.setDuplicate(Boolean.FALSE);
+		paymentInfoModel.setSaved(Boolean.TRUE);
+		paymentInfoModel.setUser(currentUser);
+		paymentInfoModel.setPaymentInfo(orderComments);
+		paymentInfoModel.setOrderHistoryNotes(bankDetails);
+		paymentInfoModel.setPaymentProvider(currentPayment);
+		paymentInfoModel.setPaymentGatewayStatus(transactionStatus);
+		cartModel.setPaymentInfo(paymentInfoModel);
+		paymentInfoModel.setCode("");
+		
+		PaymentTransactionEntryModel orderTransactionEntry = null;
+		final List<PaymentTransactionEntryModel> paymentTransactionEntries = new ArrayList<>();
+		orderTransactionEntry = createTransactionEntry(transactionID,
+											cartModel, orderAmountCent, backendTransactionComments, currency);
+		paymentTransactionEntries.add(orderTransactionEntry);
+
+		// Initiate/ Update PaymentTransactionModel
+		PaymentTransactionModel paymentTransactionModel = new PaymentTransactionModel();
+		paymentTransactionModel.setPaymentProvider(currentPayment);
+		paymentTransactionModel.setRequestId(transactionID);
+		paymentTransactionModel.setEntries(paymentTransactionEntries);
+		paymentTransactionModel.setOrder(cartModel);
+		paymentTransactionModel.setInfo(paymentInfoModel);
+
+		// Update the OrderModel
+		cartModel.setPaymentTransactions(Arrays.asList(paymentTransactionModel));
+		
+		beforePlaceOrder(cartModel);
+		final OrderModel orderModel = placeOrder(cartModel);
+		String orderNumber = orderModel.getCode();
+		
+		updateOrderStatus(orderData.getCode(), paymentInfoModel);
+		
+		
+		
+		
+		
+        //~ List<OrderModel> orderInfoModel = getOrderInfoModel(orderCode);
 
         // Update OrderHistoryEntries
-        OrderModel orderModel = this.getModelService().get(orderInfoModel.get(0).getPk());
+        //~ OrderModel orderModel = this.getModelService().get(orderInfoModel.get(0).getPk());
         
-        orderModel.getPaymentInfo().setBillingAddress(billingAddress);
-		orderModel.setPaymentAddress(billingAddress);
+        //~ orderModel.getPaymentInfo().setBillingAddress(billingAddress);
+		//~ orderModel.setPaymentAddress(billingAddress);
 
         PaymentModeModel paymentModeModel = paymentModeService.getPaymentModeForCode(currentPayment);
 
@@ -437,11 +490,20 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
             orderModel.setPaymentMode(novalnetPaymentMethod);
         }
         
-        final BaseStoreModel baseStore = this.getBaseStoreModel();
-		
-        orderModel.setStatusInfo(orderComments);
-        orderModel.setStatus(OrderStatus.COMPLETED);
-        paymentInfoModel.setCode(orderCode);
+        paymentInfoModel.setPaymentInfo(orderComments);
+		paymentInfoModel.setPaymentProvider(currentPayment);
+		paymentInfoModel.setPaymentGatewayStatus(transactionStatus);;
+		paymentInfoModel.setOrderHistoryNotes(bankDetails);
+		orderModel.setStatusInfo(backendTransactionComments);
+		paymentInfoModel.setCode(orderNumber);
+        
+        this.getModelService().saveAll(paymentInfoModel, cartModel, billingAddress);
+        
+        OrderHistoryEntryModel orderEntry = this.getModelService().create(OrderHistoryEntryModel.class);
+		orderEntry.setTimestamp(new Date());
+		orderEntry.setOrder(orderModel);
+		orderEntry.setDescription(backendTransactionComments);
+
 
         int orderPaidAmount = 0;
         String[] bankPayments = {"novalnetInvoice", "novalnetPrepayment", "novalnetBarzahlen", "novalnetGuaranteedDirectDebitSepa", "novalnetGuaranteedInvoice"};
@@ -454,10 +516,11 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
             orderPaidAmount = 0;
         } else {
             orderPaidAmount = orderAmountCent;
-
-            // Update the payment status for completed payments
-            orderModel.setPaymentStatus(PaymentStatus.PAID);
         }
+        
+        this.getModelService().saveAll(orderModel, orderEntry);
+
+		afterPlaceOrder(cartModel, orderModel);
 
         long callbackInfoTid = Long.parseLong(transactionID);
 
@@ -471,14 +534,9 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         this.getModelService().save(novalnetCallbackInfo);
 
         // Save the updated models
-        this.getModelService().saveAll(paymentInfoModel, billingAddress);
+        
 
-        OrderHistoryEntryModel orderEntry = this.getModelService().create(OrderHistoryEntryModel.class);
-        orderEntry.setTimestamp(new Date());
-        orderEntry.setOrder(orderModel);
-        orderEntry.setDescription(orderComments);
-
-        this.getModelService().saveAll(orderModel, orderEntry);
+        return getOrderConverter().convert(orderModel);
 
     }
     
