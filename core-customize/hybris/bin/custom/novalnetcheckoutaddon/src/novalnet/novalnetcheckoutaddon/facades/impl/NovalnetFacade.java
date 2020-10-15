@@ -377,7 +377,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         return orderModel;
     }
 
-    public OrderData saveOrderData(String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, String bankDetails) {
+    public OrderData saveOrderData(String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, String bankDetails) throws InvalidCartException {
 		final CartModel cartModel = getCart();
 		
 		final UserModel currentUser = getCurrentUserForCheckout();
