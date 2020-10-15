@@ -818,7 +818,7 @@ public class NovalnetSummaryCheckoutStepController extends AbstractCheckoutStepC
             
 
             novalnetFacade.saveOrderData(orderData.getCode(), orderComments, currentPayment, transactionJsonObject.get("status").toString(), orderAmountCent, transactionJsonObject.getString("currency"), transactionJsonObject.get("tid").toString(), customerJsonObject.getString("email"), addressData, cartModel, paymentInfoModel, billingAddress);
-            novalnetFacade.updateOrderStatus(orderData.getCode(), paymentInfoModel);
+            //~ novalnetFacade.updateOrderStatus(orderData.getCode(), paymentInfoModel);
 
             return confirmationPageURL(orderData);
         } else {

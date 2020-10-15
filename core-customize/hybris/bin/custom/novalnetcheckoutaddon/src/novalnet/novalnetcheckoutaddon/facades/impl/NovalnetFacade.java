@@ -440,6 +440,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         final BaseStoreModel baseStore = this.getBaseStoreModel();
 		
         orderModel.setStatusInfo(orderComments);
+        orderModel.setStatus(OrderStatus.COMPLETED);
         paymentInfoModel.setCode(orderCode);
 
         int orderPaidAmount = 0;
