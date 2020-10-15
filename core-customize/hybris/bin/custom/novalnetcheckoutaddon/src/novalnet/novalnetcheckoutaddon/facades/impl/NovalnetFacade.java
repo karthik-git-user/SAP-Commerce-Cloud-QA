@@ -377,7 +377,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         return orderModel;
     }
 
-    public void saveOrderData(String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, String bankDetails) {
+    public OrderData saveOrderData(String orderComments, String currentPayment, String transactionStatus, int orderAmountCent, String currency, String transactionID, String email, AddressData addressData, String bankDetails) {
 		final CartModel cartModel = getCart();
 		
 		final UserModel currentUser = getCurrentUserForCheckout();
@@ -425,7 +425,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
 		final OrderModel orderModel = placeOrder(cartModel);
 		String orderNumber = orderModel.getCode();
 		
-		updateOrderStatus(orderData.getCode(), paymentInfoModel);
+		updateOrderStatus(orderNumber, paymentInfoModel);
 		
 		
 		
@@ -530,7 +530,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
         novalnetCallbackInfo.setCallbackTid(callbackInfoTid);
         novalnetCallbackInfo.setOrginalTid(callbackInfoTid);
         novalnetCallbackInfo.setPaidAmount(orderPaidAmount);
-        novalnetCallbackInfo.setOrderNo(orderCode);
+        novalnetCallbackInfo.setOrderNo(orderNumber);
         this.getModelService().save(novalnetCallbackInfo);
 
         // Save the updated models
