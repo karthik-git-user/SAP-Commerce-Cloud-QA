@@ -267,6 +267,7 @@ public class NovalnetPaymentMethodCheckoutStepController extends AbstractCheckou
 
         final CartData cartData = getCheckoutFacade().getCheckoutCart();
         model.addAttribute("commonPaymentDetailsForm", new NovalnetPaymentDetailsForm());
+        model.addAttribute("hasNoPaymentInfo", Boolean.valueOf(getCheckoutFlowFacade().hasNoPaymentInfo()));
         model.addAttribute(CART_DATA_ATTR, cartData);
         model.addAttribute("deliveryAddress", cartData.getDeliveryAddress());
         model.addAttribute("paymentDetailsForm", paymentDetailsForm);
