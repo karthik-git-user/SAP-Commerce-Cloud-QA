@@ -503,6 +503,7 @@ public class NovalnetFacade extends DefaultAcceleratorCheckoutFacade {
 		orderEntry.setTimestamp(new Date());
 		orderEntry.setOrder(orderModel);
 		orderEntry.setDescription(backendTransactionComments);
+		orderModel.setPaymentInfo(paymentInfoModel);
 
 
         int orderPaidAmount = 0;
