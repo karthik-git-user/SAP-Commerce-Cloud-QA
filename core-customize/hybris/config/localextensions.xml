@@ -95,6 +95,7 @@
 	  <extension name= 'xyformsstorefrontcommons' />
 	  <extension name= 'xyformsweb' />
 	  <extension name= 'orbeonweb' />
+	  <extension name="oauth2" />
 
 
 <!-- Sample Custom Extensions -->
