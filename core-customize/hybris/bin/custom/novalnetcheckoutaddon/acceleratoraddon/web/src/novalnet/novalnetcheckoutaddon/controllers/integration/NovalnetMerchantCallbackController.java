@@ -81,6 +81,7 @@ public class NovalnetMerchantCallbackController extends BaseIntegrationControlle
 	@RequestMapping(value = "/integration/novalnet/merchant_callback", method = RequestMethod.POST)
 	public boolean handleCallback(final HttpServletRequest request, final HttpServletResponse response)
 	{
+		System.out.println("============================== came in 1 ==================================");
 		final BaseStoreModel baseStore = novalnetFacade.getBaseStoreModel();
 
 		// NOVALNET IP ADDRESS FROM HOST
