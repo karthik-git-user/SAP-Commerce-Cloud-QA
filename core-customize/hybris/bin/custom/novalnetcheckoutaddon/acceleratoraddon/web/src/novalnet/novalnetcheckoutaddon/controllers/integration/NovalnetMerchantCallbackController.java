@@ -597,7 +597,7 @@ public class NovalnetMerchantCallbackController extends BaseIntegrationControlle
 		
 		
 		System.out.println(map);
-		System.out.println("============================== print =================================="));
+		System.out.println("============================== print ==================================");
 		
 			
 			
