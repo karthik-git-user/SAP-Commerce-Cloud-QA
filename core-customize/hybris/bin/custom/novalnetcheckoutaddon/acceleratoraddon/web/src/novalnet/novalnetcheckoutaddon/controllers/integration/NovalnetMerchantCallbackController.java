@@ -579,11 +579,11 @@ public class NovalnetMerchantCallbackController extends BaseIntegrationControlle
 	public void processPost(final HttpServletRequest request, final HttpServletResponse response)
 	{
 		Map<String, String> captureParams = getRequestParameterMap(request);
-		Map<String, String> capture = getRequestParameterMap(response);
+		//~ Map<String, String> capture = getRequestParameterMap(response);
 				System.out.println("============================== came in 2 ==================================");
 				System.out.println(captureParams);
 				System.out.println("============================== print ==================================");
-				System.out.println(capture);
+				//~ System.out.println(capture);
 				System.out.println("============================== print ==================================");
 				
 		Map<String, String> map = new HashMap<String, String>();
