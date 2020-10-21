@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Enumeration;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -584,6 +585,24 @@ public class NovalnetMerchantCallbackController extends BaseIntegrationControlle
 				System.out.println("============================== print ==================================");
 				System.out.println(capture);
 				System.out.println("============================== print ==================================");
+				
+		Map<String, String> map = new HashMap<String, String>();
+
+		Enumeration headerNames = request.getHeaderNames();
+		while (headerNames.hasMoreElements()) {
+			String key = (String) headerNames.nextElement();
+			String value = request.getHeader(key);
+			map.put(key, value);
+		}
+		
+		
+		System.out.println(map);
+		System.out.println("============================== print =================================="));
+		
+			
+			
+        
+        
 		//~ initializeSiteFromRequest(request);
 
 		//~ try
