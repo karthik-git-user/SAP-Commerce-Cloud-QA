@@ -577,8 +577,13 @@ public class NovalnetMerchantCallbackController extends BaseIntegrationControlle
 	@RequestMapping(value = "/integration/novalnet/merchant_callback", method = RequestMethod.GET)
 	public void processPost(final HttpServletRequest request, final HttpServletResponse response)
 	{
+		Map<String, String> captureParams = getRequestParameterMap(request);
+		Map<String, String> capture = getRequestParameterMap(response);
 				System.out.println("============================== came in 2 ==================================");
-
+				System.out.println(captureParams);
+				System.out.println("============================== print ==================================");
+				System.out.println(capture);
+				System.out.println("============================== print ==================================");
 		//~ initializeSiteFromRequest(request);
 
 		//~ try
