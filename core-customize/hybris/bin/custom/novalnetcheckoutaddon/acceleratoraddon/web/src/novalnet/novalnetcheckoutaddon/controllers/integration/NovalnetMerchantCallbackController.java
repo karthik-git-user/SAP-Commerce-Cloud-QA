@@ -5,6 +5,7 @@ package novalnet.novalnetcheckoutaddon.controllers.integration;
 
 import de.hybris.platform.acceleratorservices.payment.PaymentService;
 import de.hybris.platform.yacceleratorstorefront.controllers.integration.BaseIntegrationController;
+import de.hybris.platform.outboundservices.decorator.impl.csrf.DefaultCsrfOutboundRequestDecorator;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import java.util.Enumeration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.http.HttpHeaders;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -595,8 +597,12 @@ public class NovalnetMerchantCallbackController extends BaseIntegrationControlle
 			map.put(key, value);
 		}
 		
+		final HttpHeaders headers = DefaultCsrfOutboundRequestDecorator.getHeadersForTokenFetching();
+		
 		
 		System.out.println(map);
+		System.out.println("============================== print ==================================");
+		System.out.println(headers);
 		System.out.println("============================== print ==================================");
 		
 			
