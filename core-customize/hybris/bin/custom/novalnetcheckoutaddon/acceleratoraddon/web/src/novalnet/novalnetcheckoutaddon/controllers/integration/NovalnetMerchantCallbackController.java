@@ -599,10 +599,12 @@ public class NovalnetMerchantCallbackController extends BaseIntegrationControlle
 		
 		//~ final HttpHeaders headers = DefaultCsrfOutboundRequestDecorator.getHeadersForTokenFetching();
 		public static final String TOKEN_EMPTY = Config.getParameter("customerticketingc4cintegration.c4c-token-empty");
+		public static final String TOKEN_EMPTY1 = Config.getParameter("fetch");
 		
 		System.out.println(map);
 		System.out.println("============================== print ==================================");
 		System.out.println(TOKEN_EMPTY);
+		System.out.println(TOKEN_EMPTY1);
 		System.out.println("============================== print ==================================");
 		
 			
