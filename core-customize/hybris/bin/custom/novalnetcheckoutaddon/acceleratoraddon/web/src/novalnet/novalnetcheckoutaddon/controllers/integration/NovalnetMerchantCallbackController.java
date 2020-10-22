@@ -5,7 +5,7 @@ package novalnet.novalnetcheckoutaddon.controllers.integration;
 
 import de.hybris.platform.acceleratorservices.payment.PaymentService;
 import de.hybris.platform.yacceleratorstorefront.controllers.integration.BaseIntegrationController;
-import de.hybris.platform.outboundservices.decorator.impl.csrf.DefaultCsrfOutboundRequestDecorator;
+//~ import de.hybris.platform.sap.core.odata.util.ODataClientService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -597,12 +597,12 @@ public class NovalnetMerchantCallbackController extends BaseIntegrationControlle
 			map.put(key, value);
 		}
 		
-		final HttpHeaders headers = DefaultCsrfOutboundRequestDecorator.getHeadersForTokenFetching();
-		
+		//~ final HttpHeaders headers = DefaultCsrfOutboundRequestDecorator.getHeadersForTokenFetching();
+		public static final String TOKEN_EMPTY = Config.getParameter("customerticketingc4cintegration.c4c-token-empty");
 		
 		System.out.println(map);
 		System.out.println("============================== print ==================================");
-		System.out.println(headers);
+		System.out.println(TOKEN_EMPTY);
 		System.out.println("============================== print ==================================");
 		
 			
