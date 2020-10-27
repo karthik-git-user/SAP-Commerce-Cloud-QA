@@ -48,7 +48,7 @@ ACC.novalnetcheckoutaddon = {
 				 event.preventDefault();
 				 event.stopImmediatePropagation();
 				if ( $( '#novalnetCreditCardIframe').css('display') != 'none' ) {
-					Novalnet.getPanHash();
+					NovalnetUtility.getPanHash();
 				} else {
 					$('#paymentDetailsForm').submit();
 				}
@@ -166,7 +166,7 @@ ACC.novalnetcheckoutaddon = {
 			bill_to_street = $("#address.line1").val() + ' ' + $("#address.line2").val();
 		}
 		
-		Novalnet.setClientKey($('#Clientkey').val());
+		NovalnetUtility.setClientKey($('#Clientkey').val());
 		
 		if($('#novalnetTestMode').val() != undefined && $('#novalnetTestMode').val() == 1) {
 			testMode = 1;
@@ -328,7 +328,7 @@ ACC.novalnetcheckoutaddon = {
                 test_mode: testMode
             }
 		}
-		Novalnet.createCreditCardForm(configurationObject);
+		NovalnetUtility.createCreditCardForm(configurationObject);
 	},
     
 	showPaymentForm : function (paymentName) {

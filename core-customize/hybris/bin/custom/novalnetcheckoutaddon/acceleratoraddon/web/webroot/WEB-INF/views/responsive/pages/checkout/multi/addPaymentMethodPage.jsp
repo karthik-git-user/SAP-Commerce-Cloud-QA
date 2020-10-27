@@ -120,7 +120,7 @@
 														<input type="hidden" id="Clientkey" value="${novalnetBaseStoreConfiguration.novalnetClientKey}"/>
 														
 													<c:if test="${novalnetCreditCardOneClick == true}">
-														<script src="https://cdn.novalnet.de/js/v2/Novalnet.js"></script>
+														<script src="https://cdn.novalnet.de/js/v2/NovalnetUtility.js"></script>
 														
 														<form:radiobutton path="creditCardOneClickData1" id="creditCardOneClickData1" value="1" label="${novalnetCreditCardOneClickCardType} ${novalnetCreditCardOneClickCardHolder} ${novalnetCreditCardOneClickMaskedCardNumber} (${novalnetCreditCardOneClickCardExpiry}) " tabindex="12"/>
 														<br/>
