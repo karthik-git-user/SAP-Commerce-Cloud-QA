@@ -408,7 +408,7 @@
                         		
         
         
-        <param-value>WEB-INF/config/web-application-config.xml</param-value>
+        <param-value>WEB-INF/config/novalnetcheckoutaddon-web-application-config.xml</param-value>
                         	
     
     
