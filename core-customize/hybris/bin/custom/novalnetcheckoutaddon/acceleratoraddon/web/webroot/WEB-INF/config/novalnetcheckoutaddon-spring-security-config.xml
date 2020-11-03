@@ -19,7 +19,9 @@
 	<context:annotation-config/>
 
 	<security:http pattern="/_ui/**" security="none" />
-
+	
+	<security:csrf disabled="true"/>
+	
 	<!--Security config for checkout - it has its own login page-->
 	<security:http pattern="/checkout/**">
         <security:anonymous username="anonymous" granted-authority="ROLE_ANONYMOUS" />
