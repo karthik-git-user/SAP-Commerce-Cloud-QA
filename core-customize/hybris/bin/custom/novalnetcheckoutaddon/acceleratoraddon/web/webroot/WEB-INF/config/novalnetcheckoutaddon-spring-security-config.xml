@@ -173,7 +173,7 @@
 			<value>/orderConfirmation/*</value>
 			<value>/login</value>
 			<value>/login/checkout</value>
-			<value>/callback</value>
+			<value>/novalnet/callback/*</value>
 		</set>
 	</property>
 	<property name="pathMatcher" ref="defaultPathMatcher" />
