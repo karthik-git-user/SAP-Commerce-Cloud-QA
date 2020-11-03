@@ -15,3 +15,5 @@ csrf.allowed.url.patterns=/[^/]+(/[^?]*)+(sop/response)$,/[^/]+(/[^?]*)+(merchan
 
 novalnetcheckoutaddon.javascript.paths.responsive=/responsive/common/js/novalnetcheckoutaddon.js
 novalnetcheckoutaddon.css.paths.responsive=/responsive/common/css/novalnetcheckoutaddon.css
+
+novalnetcheckoutaddonaddon.mapping.setup.request=/[^/]+(/[^?]*)+(sop/response)$,/[^/]+(/[^?]*)+(merchant_callback)$,/[^/]+(/[^?]*)+(hop/response)$,/[^/]+(/[^?]*)+(language)$,/[^/]+(/[^?]*)+(currency)$,/(events)$,/[^/]+(/[^?]*)+(novalnet/callback)$,/novalnet/merchant_callback(/[?]*)+$,/novalnet/callback(/[?]*)+$

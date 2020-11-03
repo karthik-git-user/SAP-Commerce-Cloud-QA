@@ -324,6 +324,10 @@
 	
 	<util:list id="csrfAllowedUrlPatternsList" />
 	
+	<bean depends-on="csrfAllowedUrlPatternsList" parent="listMergeDirective">
+		<property name="add" value="(${novalnetcheckoutaddonaddon.mapping.setup.request})/?$" />
+	</bean>
+	
 	<alias name="defaultCsrfProtectionMatcher" alias="csrfProtectionMatcher"/>
 	<bean id="defaultCsrfProtectionMatcher" class="de.hybris.platform.yacceleratorstorefront.security.CsrfProtectionMatcher">
 		<property name="csrfAllowedUrlPatterns" ref="csrfAllowedUrlPatternsList"/>
