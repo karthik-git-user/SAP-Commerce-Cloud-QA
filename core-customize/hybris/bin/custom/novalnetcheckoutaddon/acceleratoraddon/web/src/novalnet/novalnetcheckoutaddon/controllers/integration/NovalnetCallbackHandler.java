@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.regex.*;
 import java.text.DecimalFormat;
 import java.math.*;
-
+import de.hybris.platform.jalo.JaloSession;
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -118,6 +118,8 @@ public class NovalnetCallbackHandler implements BeforeControllerHandlerAdaptee {
             // Set response status as OK
             response.setStatus(HttpServletResponse.SC_OK);
              System.out.println("================"+request);
+             System.out.println("================"+JaloSession.getCurrentSession().getSessionID());
+             System.out.println("===============================================================");
             Map<String, String> captureParams = getRequestParameterMap(request);
             System.out.println(captureParams);
             Set<String> keys = captureParams.keySet();
