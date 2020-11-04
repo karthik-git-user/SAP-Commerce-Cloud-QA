@@ -327,7 +327,13 @@
 	<util:list id="csrfAllowedUrlPatternsList" />
 	
 	<bean depends-on="csrfAllowedUrlPatternsList" parent="listMergeDirective">
-		<property name="add" value="(${novalnetcheckoutaddonaddon.mapping.setup.request})/?$" />
+		<property name="add" value="/novalnet/callback(/[?]*)+$" />
+	</bean>
+	<bean depends-on="csrfAllowedUrlPatternsList" parent="listMergeDirective">
+		<property name="add" value="/[^/]+(/[^?]*)+(novalnet/callback)$" />
+	</bean>
+	<bean depends-on="csrfAllowedUrlPatternsList" parent="listMergeDirective">
+		<property name="add" value="/novalnet/callback/?$" />
 	</bean>
 	
 	<alias name="defaultCsrfProtectionMatcher" alias="csrfProtectionMatcher"/>
