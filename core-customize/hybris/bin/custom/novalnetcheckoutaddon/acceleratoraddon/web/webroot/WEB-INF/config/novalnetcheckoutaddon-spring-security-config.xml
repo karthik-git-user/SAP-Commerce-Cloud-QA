@@ -81,6 +81,7 @@
 		<security:remember-me key="yacceleratorstorefront" services-ref="rememberMeServices" />
 
 		<!-- SSL / AUTHENTICATED pages -->
+		<security:intercept-url pattern="/callback/**" security="none" />
 		<security:intercept-url pattern="/my-account/addressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')" requires-channel="https" />
 		<security:intercept-url pattern="/checkout/multi/billingaddressform" access="hasAnyRole('ROLE_ANONYMOUS','ROLE_CUSTOMERGROUP')" requires-channel="https" />
 		<security:intercept-url pattern="/my-account*" access="hasRole('ROLE_CUSTOMERGROUP')" requires-channel="https" />
