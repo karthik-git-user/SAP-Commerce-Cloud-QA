@@ -59,6 +59,10 @@
 	<!-- Ignores url(s) that match paths specified in the set -->
 	<bean id="excludeUrlRequestMatcher" class="de.hybris.platform.yacceleratorstorefront.security.ExcludeUrlRequestMatcher">
 		<property name="excludeUrlSet" ref="excludeUrlSet"/>
+		<set>
+		<value>/novalnet/callback</value>
+		</set>
+		</property>
 		<property name="pathMatcher" ref="defaultPathMatcher"/>
 	</bean>
 
