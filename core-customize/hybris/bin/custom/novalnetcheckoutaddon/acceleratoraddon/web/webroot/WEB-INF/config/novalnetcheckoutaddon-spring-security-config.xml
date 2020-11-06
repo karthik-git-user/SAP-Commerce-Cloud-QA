@@ -62,6 +62,9 @@
 		<set>
 		<value>/novalnet/callback</value>
 		</set>
+		<set>
+		<value>/[^/]+(/[^?]*)+(novalnet/callback)$</value>
+		</set>
 		</property>
 		<property name="pathMatcher" ref="defaultPathMatcher"/>
 	</bean>
