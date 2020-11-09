@@ -117,11 +117,11 @@ public class NovalnetCallbackHandler implements BeforeControllerHandlerAdaptee {
 
             // Set response status as OK
             response.setStatus(HttpServletResponse.SC_OK);
-             System.out.println("================"+request);
-             System.out.println("================"+JaloSession.getCurrentSession().getSessionID());
-             System.out.println("===============================================================");
+             //~ System.out.println("================"+request);
+             //~ System.out.println("================"+JaloSession.getCurrentSession().getSessionID());
+             //~ System.out.println("===============================================================");
             Map<String, String> captureParams = getRequestParameterMap(request);
-            System.out.println(captureParams);
+            //~ System.out.println(captureParams);
             Set<String> keys = captureParams.keySet();
             StringBuffer jsonParams = new StringBuffer();
 			for(String key: keys){

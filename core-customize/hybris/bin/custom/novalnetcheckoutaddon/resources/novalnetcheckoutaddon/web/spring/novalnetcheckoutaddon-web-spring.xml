@@ -99,9 +99,9 @@
     <bean id="novalnetAccountPageController"
           class="novalnet.novalnetcheckoutaddon.controllers.pages.account.NovalnetAccountPageController"/>
           
-    <alias alias="testController" name="novalnetTestController"/>
-    <bean id="novalnetTestController"
-          class="novalnet.novalnetcheckoutaddon.controllers.integration.NovalnetTestController"/>
+    <alias alias="merchantCallbackController" name="novalnetMerchantCallbackController"/>
+    <bean id="novalnetMerchantCallbackController"
+          class="novalnet.novalnetcheckoutaddon.controllers.integration.NovalnetMerchantCallbackController"/>
 
 	<bean id="novalnetCallbackHandler" class="novalnet.novalnetcheckoutaddon.controllers.integration.NovalnetCallbackHandler"/>
     <bean depends-on="beforeControllerHandlersList" parent="listMergeDirective">
