@@ -183,7 +183,7 @@
 	<bean id="excludeUrlRequestMatcher" class="de.hybris.platform.yacceleratorstorefront.security.ExcludeUrlRequestMatcher">
 		<property name="excludeUrlSet">
 		<set>
-		<value>/novalnet/merchant_callback/</value>
+		<value>/test/novalnet/</value>
 		</set>
 		</property>
 		<property name="pathMatcher" ref="defaultPathMatcher"/>
